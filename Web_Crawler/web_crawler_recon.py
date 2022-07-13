@@ -2,8 +2,6 @@
 
 import requests
 
-# replace "google.com" with website of your choice
-
 
 def request(url):
     try:
@@ -12,12 +10,25 @@ def request(url):
         pass
 
 
-target_url = "google.com"
+# replace "example.com" with web server of your choice
+target_url = "example.com"
 
-with open("subdomains-wordlist.txt", "r") as wordlist_file:
-    for line in wordlist_file:
-        word = line.strip()
-        test_url = word + "." + target_url
-        response = request(test_url)
-        if response:
-            print("[+] Discovered subdomain -->" + test_url)
+
+def discover_subdomains():
+    with open("subdomains-wordlist.txt", "r") as wordlist_file:
+        for line in wordlist_file:
+            word = line.strip()
+            test_url = word + "." + target_url
+            response = request(test_url)
+            if response:
+                print("[+] Discovered subdomain -->" + test_url)
+
+
+def discover_hidden_path():
+    with open("files-and-dirs-wordlist.txt", "r") as wordlist_file:
+        for line in wordlist_file:
+            word = line.strip()
+            test_url = target_url + "/" + word
+            response = request(test_url)
+            if response:
+                print("[+] Discovered URL -->" + test_url)
