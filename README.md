@@ -14,7 +14,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/Sheldon-Pang/Network-Security-Tools-Python">
-    <img src="images/logo-black.png" alt="Logo" width="150" height="150">
+    <img src="images/logo.png" alt="Logo" width="150" height="150">
   </a>
 
 <h3 align="center">Network Ethical Hacking Script</h3>
@@ -61,7 +61,7 @@ Some of the network hacking tools I have written in python. I will update and ad
 
 <div align="center">
   <a href="https://github.com/Sheldon-Pang/Network-Security-Tools-Python">
-    <img src="images/backdoor/logo-black.png" alt="app_screenshot" width="180" height="180">
+    <img src="images/backdoor/logo.png" alt="app_screenshot" width="180" height="180">
   </a>
 </div>
 
