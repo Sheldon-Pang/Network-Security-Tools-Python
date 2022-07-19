@@ -24,13 +24,13 @@ class Listener:
 
     def reliable_send(self, data):
         json_data = json.dumps(data)
-        self.connection.send(json_data.encode())
+        self.connection.send(json_data.encode('utf-8'))
 
     def reliable_receive(self):
         json_data = ""
         while True:
             try:
-                json_data = json_data + self.connection.recv(1024).decode()
+                json_data = json_data + self.connection.recv(1024).decode('utf-8', errors="ignore")
                 return json.loads(json_data)
             except ValueError:
                 continue

